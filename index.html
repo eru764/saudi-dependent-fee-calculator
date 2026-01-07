@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saudi Expat Dependent Fee Calculator (SAR)</title>
+  <meta name="description" content="Estimate Saudi expat dependent fees (family levy) using expiry and renewal dates, with historical rates since July 2017." />
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main class="page">
+    <header class="header">
+      <h1>Saudi Expat Dependent Fee Calculator</h1>
+      <p class="subhead">
+        Enter dependents + dates to estimate the dependent levy in <strong>SAR</strong>.
+        Fees are counted only from <strong>2017-07-01</strong> onward.
+      </p>
+    </header>
+
+    <section class="card" aria-label="Calculator">
+      <form id="calcForm" novalidate>
+        <div class="field">
+          <label for="dependents">Number of dependents</label>
+          <input
+            id="dependents"
+            name="dependents"
+            type="number"
+            inputmode="numeric"
+            min="0"
+            step="1"
+            placeholder="e.g., 2"
+            required
+          />
+          <p class="helper">Spouse/children/other sponsored dependents.</p>
+        </div>
+
+        <div class="field">
+          <label for="expiredSince">Expired since (or last expiry date)</label>
+          <input
+            id="expiredSince"
+            name="expiredSince"
+            type="date"
+            required
+          />
+          <p class="helper">If your expiry was before 2017-07-01, earlier months won’t be counted.</p>
+        </div>
+
+        <div class="field">
+          <label for="renewUntil">Renew until (new expiry date)</label>
+          <input
+            id="renewUntil"
+            name="renewUntil"
+            type="date"
+            required
+          />
+          <p class="helper">Pick the date you want the iqama to be valid until.</p>
+        </div>
+
+        <button class="btn" type="submit">Calculate Fee</button>
+
+        <div id="errorBox" class="error" role="alert" aria-live="polite" hidden></div>
+
+        <div id="result" class="result" aria-live="polite" hidden>
+          <div class="resultRow">
+            <div class="resultLabel">Total Dependent Fee</div>
+            <div class="resultValue"><span id="totalSar">—</span> <span class="sar">SAR</span></div>
+          </div>
+
+          <div class="resultMeta">
+            <div class="muted" id="rangeLine">—</div>
+
+            <button type="button" class="linkBtn" id="toggleBreakdown" aria-expanded="false">
+              Show breakdown
+            </button>
+
+            <div id="breakdownWrap" class="breakdown" hidden>
+              <div class="breakdownHead">
+                <span>Breakdown</span>
+                <span class="pill">Historical rates</span>
+              </div>
+              <ul id="breakdownList"></ul>
+              <p class="muted small">
+                Note: This is an estimate. Official billing/rounding can differ depending on renewal rules and system calculations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="info" aria-label="Information">
+      <h2>How this calculator works</h2>
+      <ul>
+        <li>It counts fees only from <strong>2017-07-01</strong> onward.</li>
+        <li>It splits your date range across the year-by-year fee changes.</li>
+        <li>Total = dependents × billed months × monthly rate (by period).</li>
+      </ul>
+      <p class="disclaimer">
+        Disclaimer: This provides an estimate for planning purposes and is not an official government service.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>Fast • Mobile-friendly • Built for Saudi expats</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
