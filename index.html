@@ -1,14 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="-lBDEOluVzNmaFE7Gf5KcZlRo70yU4ahsuo7yUrm5IU" />
-  <meta name="google-site-verification" content="snKZSsP1RIGmiQH4Yqap1L6R31ayar-ruFoX3uuofzo" />
   <meta charset="utf-8" />
+  <title>Saudi Expat Dependent Fee Calculator | KSA Expat Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Saudi Expat Dependent Fee Calculator (SAR)</title>
-  <meta name="description" content="Estimate Saudi expat dependent fees (family levy) using expiry and renewal dates, with historical rates since July 2017." />
+  <meta name="description" content="Calculate Saudi expat dependent fees accurately from 2017 to present. Free calculator for KSA expats." />
+  <link rel="canonical" href="https://ksaexpat.services/" />
 
-  <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,104 +15,94 @@
 </head>
 
 <body>
-  <main class="page">
+  <main class="page" id="app" data-lang="en">
+
+    <!-- Language Toggle -->
+    <div class="lang-toggle">
+      <button data-lang-btn="en" class="active">EN</button>
+      <button data-lang-btn="ar">عربي</button>
+    </div>
+
+    <!-- Header -->
     <header class="header">
-      <h1>Saudi Expat Dependent Fee Calculator</h1>
-      <p class="subhead">
-        Enter dependents + dates to estimate the dependent levy in <strong>SAR</strong>.
-        Fees are counted only from <strong>2017-07-01</strong> onward.
+      <h1 data-i18n="title">Saudi Expat Dependent Fee Calculator</h1>
+      <p class="subhead" data-i18n="subtitle">
+        Estimate dependent (family levy) fees in Saudi Arabia from July 2017 onward.
       </p>
     </header>
 
-    <section class="card" aria-label="Calculator">
+    <!-- Calculator -->
+    <section class="card">
       <form id="calcForm" novalidate>
+
         <div class="field">
-          <label for="dependents">Number of dependents</label>
-          <input
-            id="dependents"
-            name="dependents"
-            type="number"
-            inputmode="numeric"
-            min="0"
-            step="1"
-            placeholder="e.g., 2"
-            required
-          />
-          <p class="helper">Spouse/children/other sponsored dependents.</p>
+          <label data-i18n="dependents_label">Number of dependents</label>
+          <input id="dependents" type="number" min="0" step="1" required />
         </div>
 
         <div class="field">
-          <label for="expiredSince">Expired since (or last expiry date)</label>
-          <input
-            id="expiredSince"
-            name="expiredSince"
-            type="date"
-            required
-          />
-          <p class="helper">If your expiry was before 2017-07-01, earlier months won’t be counted.</p>
+          <label data-i18n="expired_label">Expired since (or last expiry date)</label>
+          <input id="expiredSince" type="date" required />
         </div>
 
         <div class="field">
-          <label for="renewUntil">Renew until (new expiry date)</label>
-          <input
-            id="renewUntil"
-            name="renewUntil"
-            type="date"
-            required
-          />
-          <p class="helper">Pick the date you want the iqama to be valid until.</p>
+          <label data-i18n="renew_label">Renew until</label>
+          <input id="renewUntil" type="date" required />
         </div>
 
-        <button class="btn" type="submit">Calculate Fee</button>
+        <button class="btn" type="submit" data-i18n="calculate_btn">
+          Calculate Fee
+        </button>
 
-        <div id="errorBox" class="error" role="alert" aria-live="polite" hidden></div>
+        <div id="errorBox" class="error" hidden></div>
 
-        <div id="result" class="result" aria-live="polite" hidden>
+        <div id="result" class="result" hidden>
           <div class="resultRow">
-            <div class="resultLabel">Total Dependent Fee</div>
-            <div class="resultValue"><span id="totalSar">—</span> <span class="sar">SAR</span></div>
-          </div>
-
-          <div class="resultMeta">
-            <div class="muted" id="rangeLine">—</div>
-
-            <button type="button" class="linkBtn" id="toggleBreakdown" aria-expanded="false">
-              Show breakdown
-            </button>
-
-            <div id="breakdownWrap" class="breakdown" hidden>
-              <div class="breakdownHead">
-                <span>Breakdown</span>
-                <span class="pill">Historical rates</span>
-              </div>
-              <ul id="breakdownList"></ul>
-              <p class="muted small">
-                Note: This is an estimate. Official billing/rounding can differ depending on renewal rules and system calculations.
-              </p>
+            <div class="resultLabel" data-i18n="total_label">Total Fee</div>
+            <div class="resultValue">
+              <span id="totalSar">0</span> SAR
             </div>
           </div>
+          <p id="rangeLine" class="muted"></p>
         </div>
+
       </form>
     </section>
 
-    <section class="info" aria-label="Information">
-      <h2>How this calculator works</h2>
-      <ul>
-        <li>It counts fees only from <strong>2017-07-01</strong> onward.</li>
-        <li>It splits your date range across the year-by-year fee changes.</li>
-        <li>Total = dependents × billed months × monthly rate (by period).</li>
-      </ul>
-      <p class="disclaimer">
-        Disclaimer: This provides an estimate for planning purposes and is not an official government service.
+    <!-- About -->
+    <section class="info">
+      <h2 data-i18n="about_title">About KSA Expat Services</h2>
+      <p data-i18n="about_text">
+        This independent website helps expatriates estimate government-related costs in Saudi Arabia using public information.
+      </p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="info">
+      <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
+
+      <p><strong data-i18n="faq_q1">When did dependent fees start?</strong></p>
+      <p data-i18n="faq_a1">The dependent fee started in July 2017.</p>
+
+      <p><strong data-i18n="faq_q2">How much is the fee?</strong></p>
+      <p data-i18n="faq_a2">It reached SAR 400 per month per dependent in July 2020.</p>
+    </section>
+
+    <!-- Privacy -->
+    <section class="info">
+      <h2 data-i18n="privacy_title">Privacy Policy</h2>
+      <p data-i18n="privacy_text">
+        This site does not collect personal data. Calculations are performed locally in your browser.
       </p>
     </section>
 
     <footer class="footer">
-      <p>Fast • Mobile-friendly • Built for Saudi expats</p>
+      <p>© 2026 KSA Expat Services</p>
     </footer>
+
   </main>
 
   <script src="script.js"></script>
+  <script src="lang.js"></script>
 </body>
 </html>
-
