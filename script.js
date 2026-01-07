@@ -1,4 +1,4 @@
-// script.js (FULL) — months + days prorated estimate
+// script.js (FULL) — detailed breakdown: months part + days part separately
 // Daily proration uses: daily = monthlyRate / 30 (estimate)
 
 function formatNumber(n) {
@@ -23,7 +23,7 @@ function parseDateInput(value) {
   if (!value) return null;
   const [y, m, d] = value.split("-").map(Number);
   if (!y || !m || !d) return null;
-  return new Date(y, m - 1, d); // local date at midnight
+  return new Date(y, m - 1, d);
 }
 
 function dateToYMD(d) {
@@ -34,7 +34,6 @@ function dateToYMD(d) {
 }
 
 function daysInMonth(year, monthIndex0) {
-  // monthIndex0 is 0-11
   return new Date(year, monthIndex0 + 1, 0).getDate();
 }
 
@@ -58,13 +57,11 @@ function utcDayNumber(d) {
 }
 
 function diffDaysUTC(start, end) {
-  // end-exclusive day difference (safe vs DST)
   return Math.max(0, Math.round(utcDayNumber(end) - utcDayNumber(start)));
 }
 
 /**
  * Split [start, end) into full calendar months + remaining days.
- * Example: Jan 1 -> Feb 15 = 1 month + 14 days.
  */
 function splitMonthsAndDays(start, end) {
   if (end <= start) return { months: 0, days: 0 };
@@ -103,7 +100,7 @@ const PERIODS = [
   { start: new Date(2020, 6, 1), end: null,              rate: 400 },
 ];
 
-// Breakdown toggle (only exists on calculator page)
+// Breakdown toggle (calculator page)
 const toggleBtn = document.getElementById("toggleBreakdown");
 const breakdownWrap = document.getElementById("breakdownWrap");
 
@@ -112,7 +109,6 @@ if (toggleBtn && breakdownWrap) {
     const isOpen = !breakdownWrap.hidden;
     breakdownWrap.hidden = isOpen;
     toggleBtn.setAttribute("aria-expanded", String(!isOpen));
-    // lang.js may overwrite this label; keep English fallback
     toggleBtn.textContent = isOpen ? "Show breakdown" : "Hide breakdown";
   });
 }
@@ -137,7 +133,6 @@ if (form) {
       return showError('"Renew until" must be after "expired since".');
     }
 
-    // If renewal ends before fee start: total is 0 by design
     if (renewUntil <= FEE_START) {
       return renderResult({
         total: 0,
@@ -148,7 +143,6 @@ if (form) {
       });
     }
 
-    // Clamp start so we never charge before 2017-07-01
     const effectiveStart = expiredSince < FEE_START ? FEE_START : expiredSince;
     const effectiveEnd = renewUntil;
 
@@ -165,16 +159,26 @@ if (form) {
       const { months, days } = splitMonthsAndDays(start, end);
 
       const dailyRate = p.rate / 30; // estimate
-      const subtotal =
-        dependents * (months * p.rate + days * dailyRate);
+      const monthsFee = dependents * months * p.rate;
+      const daysFee = dependents * days * dailyRate;
+      const subtotal = monthsFee + daysFee;
 
       total += subtotal;
 
+      // Header line for period
       breakdownItems.push(
-        `${dateToYMD(pStart)} → ${p.end ? dateToYMD(p.end) : "onward"}: ` +
-        `${months} month(s) + ${days} day(s) × ` +
-        `${dependents} dependent(s) = SAR ${formatNumber(subtotal)} ` +
-        `(monthly SAR ${p.rate}, daily ≈ SAR ${formatNumber(dailyRate)})`
+        `Period ${dateToYMD(pStart)} → ${p.end ? dateToYMD(p.end) : "onward"} (rate: SAR ${p.rate}/month)`
+      );
+
+      // Detail lines (separate calculations)
+      breakdownItems.push(
+        `• Months: ${dependents} × ${months} × ${p.rate} = SAR ${formatNumber(monthsFee)}`
+      );
+      breakdownItems.push(
+        `• Days: ${dependents} × ${days} × ${formatNumber(dailyRate)} = SAR ${formatNumber(daysFee)} (daily ≈ ${formatNumber(dailyRate)})`
+      );
+      breakdownItems.push(
+        `= Subtotal: SAR ${formatNumber(subtotal)}`
       );
     }
 
@@ -183,7 +187,7 @@ if (form) {
       : "";
 
     breakdownItems.push(
-      `Proration note: days are estimated using monthly/30. Official systems may bill monthly and can differ.`
+      `Proration note: daily fee is estimated using monthly/30. Official systems may bill monthly and can differ.`
     );
 
     renderResult({
