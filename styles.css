@@ -267,3 +267,32 @@ li{ margin: 8px 0; }
   h1{ font-size: 28px; }
   .resultValue{ font-size: 32px; }
 }
+.lang-toggle {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.lang-toggle button {
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.lang-toggle button.active {
+  background: #1B7F5B;
+  color: #fff;
+  border-color: #1B7F5B;
+}
+
+html[dir="rtl"] {
+  text-align: right;
+}
+
+html[dir="rtl"] .resultRow {
+  flex-direction: row-reverse;
+}
