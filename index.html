@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <title>Saudi Expat Dependent Fee Calculator | KSA Expat Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Calculate Saudi expat dependent fees accurately from 2017 to present. Free calculator for KSA expats." />
+  <meta name="description" content="Calculate Saudi expat dependent (family levy) fees from July 2017 onward. Free and simple calculator for KSA expats." />
   <link rel="canonical" href="https://ksaexpat.services/" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,13 +17,20 @@
 <body>
   <main class="page" id="app" data-lang="en">
 
-    <!-- Language Toggle -->
-    <div class="lang-toggle">
-      <button data-lang-btn="en" class="active">EN</button>
-      <button data-lang-btn="ar">عربي</button>
+    <div class="topbar">
+      <nav class="nav">
+        <a class="navLink active" href="/" data-i18n="nav_calc">Calculator</a>
+        <a class="navLink" href="/faq.html" data-i18n="nav_faq">FAQ</a>
+        <a class="navLink" href="/about.html" data-i18n="nav_about">About</a>
+        <a class="navLink" href="/privacy.html" data-i18n="nav_privacy">Privacy</a>
+      </nav>
+
+      <div class="lang-toggle">
+        <button data-lang-btn="en" class="active">EN</button>
+        <button data-lang-btn="ar">عربي</button>
+      </div>
     </div>
 
-    <!-- Header -->
     <header class="header">
       <h1 data-i18n="title">Saudi Expat Dependent Fee Calculator</h1>
       <p class="subhead" data-i18n="subtitle">
@@ -31,73 +38,74 @@
       </p>
     </header>
 
-    <!-- Calculator -->
-    <section class="card">
+    <section class="card" aria-label="Calculator">
       <form id="calcForm" novalidate>
-
         <div class="field">
-          <label data-i18n="dependents_label">Number of dependents</label>
-          <input id="dependents" type="number" min="0" step="1" required />
+          <label for="dependents" data-i18n="dependents_label">Number of dependents</label>
+          <input id="dependents" type="number" min="0" step="1" placeholder="e.g., 2" required />
+          <p class="helper" data-i18n="dependents_help">Spouse/children/other sponsored dependents.</p>
         </div>
 
         <div class="field">
-          <label data-i18n="expired_label">Expired since (or last expiry date)</label>
+          <label for="expiredSince" data-i18n="expired_label">Expired since (or last expiry date)</label>
           <input id="expiredSince" type="date" required />
+          <p class="helper" data-i18n="expired_help">Any period before 2017-07-01 is not charged.</p>
         </div>
 
         <div class="field">
-          <label data-i18n="renew_label">Renew until</label>
+          <label for="renewUntil" data-i18n="renew_label">Renew until (new expiry date)</label>
           <input id="renewUntil" type="date" required />
+          <p class="helper" data-i18n="renew_help">Pick the date you want the iqama to be valid until.</p>
         </div>
 
-        <button class="btn" type="submit" data-i18n="calculate_btn">
-          Calculate Fee
-        </button>
+        <button class="btn" type="submit" data-i18n="calculate_btn">Calculate Fee</button>
 
-        <div id="errorBox" class="error" hidden></div>
+        <div id="errorBox" class="error" role="alert" aria-live="polite" hidden></div>
 
-        <div id="result" class="result" hidden>
+        <div id="result" class="result" aria-live="polite" hidden>
           <div class="resultRow">
-            <div class="resultLabel" data-i18n="total_label">Total Fee</div>
-            <div class="resultValue">
-              <span id="totalSar">0</span> SAR
+            <div class="resultLabel" data-i18n="total_label">Total Dependent Fee</div>
+            <div class="resultValue"><span id="totalSar">—</span> <span class="sar">SAR</span></div>
+          </div>
+
+          <div class="resultMeta">
+            <div class="muted" id="rangeLine">—</div>
+
+            <button type="button" class="linkBtn" id="toggleBreakdown" aria-expanded="false" data-i18n="toggle_breakdown">
+              Show breakdown
+            </button>
+
+            <div id="breakdownWrap" class="breakdown" hidden>
+              <div class="breakdownHead">
+                <span data-i18n="breakdown_title">Breakdown</span>
+                <span class="pill" data-i18n="breakdown_pill">Historical rates</span>
+              </div>
+              <ul id="breakdownList"></ul>
+              <p class="muted small" data-i18n="breakdown_note">
+                Note: This is an estimate. Official billing/rounding can differ depending on renewal rules and system calculations.
+              </p>
             </div>
           </div>
-          <p id="rangeLine" class="muted"></p>
         </div>
-
       </form>
     </section>
 
-    <!-- About -->
-    <section class="info">
-      <h2 data-i18n="about_title">About KSA Expat Services</h2>
-      <p data-i18n="about_text">
-        This independent website helps expatriates estimate government-related costs in Saudi Arabia using public information.
-      </p>
-    </section>
-
-    <!-- FAQ -->
-    <section class="info">
-      <h2 data-i18n="faq_title">Frequently Asked Questions</h2>
-
-      <p><strong data-i18n="faq_q1">When did dependent fees start?</strong></p>
-      <p data-i18n="faq_a1">The dependent fee started in July 2017.</p>
-
-      <p><strong data-i18n="faq_q2">How much is the fee?</strong></p>
-      <p data-i18n="faq_a2">It reached SAR 400 per month per dependent in July 2020.</p>
-    </section>
-
-    <!-- Privacy -->
-    <section class="info">
-      <h2 data-i18n="privacy_title">Privacy Policy</h2>
-      <p data-i18n="privacy_text">
-        This site does not collect personal data. Calculations are performed locally in your browser.
+    <section class="info" aria-label="Quick note">
+      <h2 data-i18n="home_note_title">Quick note</h2>
+      <p data-i18n="home_note_text">
+        This tool estimates fees from 1 July 2017 onward and excludes any time before that date. For explanations and common questions, see the FAQ.
       </p>
     </section>
 
     <footer class="footer">
-      <p>© 2026 KSA Expat Services</p>
+      <p>
+        <a href="/faq.html" class="footerLink" data-i18n="nav_faq">FAQ</a>
+        ·
+        <a href="/about.html" class="footerLink" data-i18n="nav_about">About</a>
+        ·
+        <a href="/privacy.html" class="footerLink" data-i18n="nav_privacy">Privacy</a>
+      </p>
+      <p class="muted">© 2026 KSA Expat Services</p>
     </footer>
 
   </main>
